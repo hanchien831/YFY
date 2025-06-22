@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">import React, { useState, useEffect, useRef, useCallback } from 'react';</p>
+<p class="p2"><br></p>
+<p class="p1">// 主應用程式組件</p>
+<p class="p1">const App = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 定義事件數據</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const [events, setEvents] = useState([</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e1', name: 'Y2503 北京出差聯繫挑戰',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 50, y: 50 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2503：北京特休聯繫中斷事件', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '出國前雖已安排 Passion 作為緊急窗口，但未以書面通知 Stacey，也未設定自動備援機制。微信被鎖、LINE 無法收訊後，未用信件或其他備援方式即時回報，讓主管完全失聯。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為我以「帳號被鎖」為藉口逃避責任。認為我是故意失聯、沒交接、態度輕忽。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '3/18 更換 SIM 卡後，微信遭封鎖、LINE 無法同步訊息。當天下午即透過 Messenger 聯繫 Passion，請他代理橘子口碑窗口作業。出國前已與 Passion 口頭約定，如遇異常他會協助窗口作業。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 認為我完全未安排交接與支援人員。認為我棄職、讓她一人承擔窗口與專案壓力。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: 'Stacey 對我產生「不可控、不可預期」的負面印象。成為後續綠界進度延誤（Y2504）與 MOMO 設定疏漏（Y2505）信任危機的起點。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e2', name: 'Y2503 Costco 膠囊買手任務',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 300, y: 50 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2503：Costco 膠囊任務誤解', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '面對口頭任務未主動製作書面紀錄，未即時同步執行進度。雖有完整執行紀錄，卻無法即時佐證與溝通，讓她有資訊斷點。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為我推說是她交辦，但無任何記錄。認為我「自作主張」執行，未經回報，過於越界。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: 'Stacey 會議中口頭指示：「找人穩定 Costco 業績，預算控制在 7 萬內。」我找了熟識的合作對象小肉，他因品牌好感願意無償協助地推。拜訪名單與支出紀錄均有保留，未支付佣金。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 認為我擅自決定、使用不明人脈，甚至懷疑是否有挪用資源。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '她對我有「誠信與界線模糊」的既定印象。成為預算調整（Y2504）與發票追責（Y2505）的不信任基礎。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e3', name: 'Y2504 預算責任爭議',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 550, y: 50 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2504：預算調整與綠界合作誤會', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '未即時調整提案內容、提醒合作金額與預算落差。面對預算縮減，未向上主動回報風險評估，導致她認為我不懂控預算。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為「你知道沒錢了還一直報高價。」「你都說成本合理，但怎麼比別人都貴？」',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '2月初 Stacey 親自帶我與綠界開會，並表明「可以重押這案子」。3/13 她未說明理由即通知整期預算壓縮，我可動用金額變為 1.6 萬。但她仍要求我執行綠界案，未調整規模與期待。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 認為我無視資源限制，繼續「亂花錢」。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '後續我提出的任何素材或預算配置都被她高強度審核。導致綠界窗口問題（Y2504）與發票事件（Y2505）壓力全面轉嫁到我身上。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e4', name: 'Y2504 綠界大數據合作',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 550, y: 200 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2504：綠界窗口進度與壓力轉嫁', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '沒有用正式報告回報窗口配合問題，也未即時釐清窗口延誤非我責任。未能第一時間阻斷外部抱怨轉嫁至 Stacey 的風險。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為「你說有處理，可是人家還是來找我。」「你是不是根本沒盯？」',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '我持續與 Jason 回信對接，並有通話與催促紀錄。對方進度延宕，我也在內部訊息中回報「風險較高」。外部窗口因壓力轉向 Stacey 抱怨，她未查看對話紀錄即指責我沒處理。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 認為我窗口控管失能，甚至讓廠商越過我直通主管。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '她開始在其他專案中直接與廠商聯繫，削弱我窗口主導權。導致我在發票爭議事件（Y2505）中失去說服力。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e5', name: 'Y2504 綠界老闆情緒轉嫁',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 550, y: 350 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2504：綠界老闆情緒轉嫁事件', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '我反思，儘管合約與流程反覆修改是客觀事實，但面對外部合作夥伴直接向主管表達不滿時，我或許可以更及時地主動彙報合約進度中的複雜性，並預警可能出現的外部意見，以便主管在收到抱怨前能有更多背景資訊，避免因主管措手不及而將壓力轉嫁於我。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey可能認為我在處理合約與流程上存在延遲，且我會以「合約反覆修改」作為無法即時處理的藉口。認為我沒有讓外部夥伴感受到高效。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '綠界合作過程中因合約與流程反覆修改，對方老闆在過程中曾主動聯繫 Stacey，表達對我處理進度的不滿。雖我早已持續主動追蹤。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 仍被 Stacey 當場質問「為什麼讓人家這樣來找我？」「你怎麼做事的？」並要求我馬上、立即、不得延遲地回覆所有訊息。她強調：「你要知道他們等不得」「我不希望有人因為你延誤來跟我抱怨」。Stacey在未充分了解合約反覆修改的複雜性以及我已持續追蹤的情況下，誤將對方老闆的不滿全盤歸咎於我，並認為我沒有妥善處理。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '她將外部壓力直接轉嫁，未能理解我的努力與困境，使我長期處於恐懼與被否定的精神狀態中。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e6', name: 'Y2505 MOMO 折價券走期',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 50, y: 500 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2505：MOMO 折價券設定誤會', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '未建立跨部門設定異動的雙重確認機制。對業務改動未有日常監控與紀錄補充。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為「業務沒講不是藉口，你本來就要知道設定。」',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: 'MOMO 設定由業務端操作，未通知我就更改了走期。發現錯誤後我已立即補救，但她視為我失職。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 認為我又一次「控設定不力」，且不願承認錯誤。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '她對我 PM 職能產生全面質疑。成為抽獎設定（Y2506）與 Daphne 指控事件的判定基礎。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e7', name: 'Y2505 潮網發票追查未到',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 300, y: 500 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2505：發票追責與窗口信任危機 (潮網)', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '沒建立可見度高的追蹤清單供 Stacey 掌握每張發票進度。發信提醒廠商時未先讓她預知，導致她覺得我越權。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為「你一直說有追，但就是沒處理完。」「你是不是讓窗口不爽，他們才直接找我？」',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '潮網發票被退回，我休假時仍持續追進度。因上傳發票憑證後，我的面向已經無其他費用單據，事後發現此單還在財務身上的，造成對帳異常。過程中，2月主動回報3月回覆過此發票將於2月請款，半年為何不付帳？',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 未查證事實，直接來電嚴厲責罵，語氣激烈，甚至要求我「自己負責」與「不要再推託」。卻在毫無預警的情況下接到對方來電，以謾罵口吻質問我「到底有沒有負責任」、甚至以「大小姐失職」等詞語侮辱我的人格。事後 Stacey 也未進一步查證流程即回信指責我作業失職，要求我「務必」追蹤所有代理商發票狀況，語氣極其強硬。Stacey 覺得我放任窗口延誤、與合作夥伴關係不佳。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '讓我極度錯愕與挫敗。廠商改與她直接對接，我窗口功能失效。影響抽獎事件與設定誤會處理力道下降。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e8', name: '媒體庫發票拒收換開',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 550, y: 500 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: '媒體庫發票拒收換開', // Original name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '我反思，儘管我已努力依照流程處理並進行補救，但對於請款流程的複雜性與各家供應商的差異，我或許可以更主動地建立一個清晰的發票追蹤表格，定期更新並主動與主管匯報，突出流程中的潛在風險點，確保主管能掌握整體進度，避免因資訊不透明而產生「系統性疏失」的誤解。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey可能認為「流程繁瑣」是藉口，認為我對流程掌控不足。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '近日媒體庫窗口來電，表示品牌端未付款，引發誤會。事實上，我早已依據流程與窗口確認費用內容，並針對未符合流程的發票操作（如未先填寫雲端、未告知即寄送發票）進行補救與退件處理。5月已補開專案發票，也完成所有進度說明。但由於請款流程繁瑣、每家供應商狀況不同，導致時程無法統一。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'S主管在未充分釐清前，公開對我提出質疑與嚴厲指責，甚至認為我有系統性疏失。Stacey在未充分釐清發票處理的複雜性、各供應商狀況差異以及我已做的補救措施前，誤以為我未盡職責，並將問題誇大為「系統性疏失」。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '這讓我備感壓力。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e9', name: '漸強平台發票換開',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 800, y: 500 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: '漸強平台發票換開', // Original name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '我反思，儘管我用意是確保發票準時並避免遺漏，但對於發送給合作廠商的信件，我應更細緻考量語氣和措辭，必要時先內部確認再發出，確保信件在傳達提醒的同時，兼顧對合作夥伴的尊重，避免因語氣引起主管情緒反應與誤解。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey可能認為我聲稱「基於她的指示」或「防止遺漏」是為信件內容找藉口。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '在我積極補件並清查各平台發票流程後，為確保發票準時，我主動彙整所有代理商發票進度並一一發信提醒。我的用意：這是基於她的指示、用來防止遺漏。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: '但信件一發出來，Stacey在未看內容的第一時間直接質問我「為什麼寫這樣？」「這根本是對他們不敬」並情緒性表達不滿。Stacey在未閱讀信件內容、不了解我主動發信的善意與目的前，僅憑信件形式或語氣（在她看來）判斷為「不敬」，誤解了我的意圖。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '當我試圖解釋這是基於她的指示、用來防止遺漏，她仍持續施加高壓語氣，完全不給我說明空間。讓我感受到不被信任與不被允許解釋的壓力。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e10', name: '對外窗口誠信被動搖',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 300, y: 700 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: '對外窗口誠信被動搖', // Original name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '我反思，儘管主管直接聯繫外部夥伴的行為既定，但對可能影響我在對外窗口公信力的行為，我應更主動與主管溝通，理解其直接聯繫目的，並尋求必要時預先被告知或共同參與，以維持對外窗口穩定性與我的主導地位，避免信任關係崩解。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey可能認為廠商繞過我聯繫主管是因為我溝通不足或訊息有誤，而我對此的解釋是在推卸責任。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '包括漸強、媒體庫、綠界等合作廠商，Stacey多次未與我對齊便直接聯繫，意圖「查證」我回報的真實性。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey誤以為需要直接「查證」我向她匯報的內容，導致她繞過我直接與廠商溝通，這暗示著對我誠信與專業的不信任。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '造成我在對外窗口間的信任關係全面崩解。部分廠商後來選擇直接繞過我與主管聯絡，這讓我作為窗口的公信力受損，也讓我無法有效執行合作。人格信譽遭系統性破壞。明顯感受到對方轉為對她回報、不再與我確認細節，使我從主窗口邊緣化，對我來說這等同人格與專業的否定。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e11', name: 'Y2506 公開會議中當眾斥責',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 550, y: 800 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2506：抽獎流程與公開會議質疑', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '抽獎完成後未主動報告，導致資訊落差。未設法預防主管會議上突襲問話的誤會風險。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為「你不是昨天說不能抽，今天又說抽完了？」',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '抽獎流程中，我清楚知道流程需要法務參與，6/11法務下班，我延後至6/12早完成抽獎與審核，並立刻補上抽獎與通知。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 未得知時間差即在會議中直接點名質疑。她卻遭 Stacey 於30人會議中公開罵「已違規」。Stacey在未詢問任何背景的情況下，當眾被責備、收到嚴重指控的語氣信。發信內容強調「我再度嚴肅警告你」，建立「妳一錯再錯」的標籤，使其他同事觀感受損。Stacey在未詢問任何背景、未查證實際處理時程的情況下，誤以為我未能遵守規定或故意延誤，並將此問題放大為「已違規」，且在公開場合進行羞辱。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '同時使用語言如「你又沒控好」來打擊角色定位與價值，不要回頭看此案上線日期也是他准許往後一天並沒有如期上線。30多人會議中當場用極大音量質問我，否定我人格這些都讓我逐漸失去信心與安全感。讓TM同事來私下關心。長期處於「情緒主導模式」，包括訊息常在未讀完前就進行責備，甚至在對外窗口溝通中情緒波動過大，使我不敢主動發言或回報真實進度，深怕一個解釋又被視為「找藉口」。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id: 'e12', name: 'Daphne 事件（信任崩潰）',</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: { x: 800, y: 700 },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>details: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>name: 'Y2506：Daphne 設定質疑與信任裂痕', // Updated name for display in details panel</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mistake: '面對指控反應太慢，未立即提出完整操作紀錄反擊。未提前建立與 Daphne 的協作默契，彼此缺乏互信。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>excuse: 'Stacey 認為「你總說你有做，可是每次都沒看到東西。」',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>actual: '設定當天我已照規則執行抽獎與紀錄提交。Daphne 看到的空白畫面，是抽獎完成後被鎖定所致。Daphne在未與我確認的情況下，直接對主管表示我設定錯誤，導致抽獎流程中斷。我當時已有完整設定紀錄、雙方確認內容與補救修正紀錄。Daphne更在私下傳訊主管，提出是否應考慮將我調離甚至開除。更嚴重的是，她在公開郵件中多次質疑我不盡責、不協助，卻事實上在後台仍持續向我詢問資訊，並拒絕承接與我有關的任務。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>misunderstood: 'Stacey 在 Daphne 單方面的說詞下，誤解了流程中斷的原因，並將責任歸咎於我，無視我已做的努力與保留的記錄。她未能辨別 Daphne 行為的惡意與對團隊氛圍的破壞。',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>impact: '間接製造部門對立與情緒壓力。Daphne 的行為直接動搖我在團隊中的地位，對我的信任造成毀滅性打擊，成為壓垮信任的最後一根稻草。'</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 定義事件之間的連結</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const connections = [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e1', to: 'e2', label: '高壓管理模式強化' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e3', to: 'e4', label: '預算/合作關聯' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e4', to: 'e5', label: '合作問題引發外部抱怨' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e1', to: 'e10', label: '信任缺失累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e2', to: 'e10', label: '信任缺失累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e3', to: 'e10', label: '信任缺失累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e4', to: 'e10', label: '信任缺失累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e5', to: 'e10', label: '信任缺失累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e6', to: 'e10', label: '行政問題累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e7', to: 'e10', label: '行政問題累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e8', to: 'e10', label: '行政問題累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e9', to: 'e10', label: '溝通問題累積' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e10', to: 'e11', label: '累積壓力爆發' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e11', to: 'e12', label: '信任最終崩潰' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e5', to: 'e11', label: '情緒累積爆發' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e7', to: 'e11', label: '行政問題激化' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e8', to: 'e11', label: '行政問題激化' },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ from: 'e9', to: 'e11', label: '溝通問題激化' }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const [draggingNodeId, setDraggingNodeId] = useState(null);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const [offset, setOffset] = useState({ x: 0, y: 0 });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const [selectedNodeDetails, setSelectedNodeDetails] = useState(null);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const [solutionLoading, setSolutionLoading] = useState(false); // 新增：解決方案載入狀態</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const [solutionText, setSolutionText] = useState(''); // 新增：解決方案文字</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const containerRef = useRef(null);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 處理滑鼠/觸控開始拖曳</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const handleDragStart = useCallback((e, id) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const node = events.find(event =&gt; event.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (node) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const clientX = e.clientX || e.touches[0].clientX;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const clientY = e.clientY || e.touches[0].clientY;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setDraggingNodeId(id);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setOffset({</p>
+<p class="p1"><span class="Apple-converted-space">                </span>x: clientX - node.position.x,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>y: clientY - node.position.y</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>e.stopPropagation(); // 阻止事件冒泡，避免拖曳地圖</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, [events]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 處理滑鼠/觸控移動</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const handleDragMove = useCallback((e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!draggingNodeId) return;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const clientX = e.clientX || e.touches[0].clientX;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const clientY = e.clientY || e.touches[0].clientY;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>setEvents(prevEvents =&gt; prevEvents.map(event =&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>event.id === draggingNodeId</p>
+<p class="p1"><span class="Apple-converted-space">                </span>? { ...event, position: { x: clientX - offset.x, y: clientY - offset.y } }</p>
+<p class="p1"><span class="Apple-converted-space">                </span>: event</p>
+<p class="p1"><span class="Apple-converted-space">        </span>));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>e.preventDefault(); // 防止滾動，尤其是觸控事件</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, [draggingNodeId, offset]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 處理滑鼠/觸控結束拖曳</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const handleDragEnd = useCallback(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setDraggingNodeId(null);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, []);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 點擊節點顯示詳情</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const handleNodeClick = useCallback((id) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const node = events.find(event =&gt; event.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setSelectedNodeDetails(node ? node.details : null);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setSolutionText(''); // 清空之前的解決方案</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, [events]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 點擊空白處關閉詳情</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const handleCanvasClick = useCallback((e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 如果點擊的不是節點本身，也不是詳情面板的任何部分</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (e.target === containerRef.current || !e.target.closest('.event-node') &amp;&amp; !e.target.closest('.details-panel')) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setSelectedNodeDetails(null);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setSolutionText(''); // 清空解決方案</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, []);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>useEffect(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 添加全局事件監聽器，以便拖曳在節點外也能正常工作</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('mousemove', handleDragMove);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('mouseup', handleDragEnd);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('touchmove', handleDragMove, { passive: false }); // passive: false for preventDefault</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('touchend', handleDragEnd);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 清理事件監聽器</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>window.removeEventListener('mousemove', handleDragMove);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>window.removeEventListener('mouseup', handleDragEnd);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>window.removeEventListener('touchmove', handleDragMove);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>window.removeEventListener('touchend', handleDragEnd);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}, [handleDragMove, handleDragEnd]);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// LLM 建議解決方案功能</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const handleSuggestSolution = async () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!selectedNodeDetails) return;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>setSolutionLoading(true);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>setSolutionText(''); // 清空舊的解決方案</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const prompt = `</p>
+<p class="p1"><span class="Apple-converted-space">        </span>請根據以下事件描述，提供專業的衝突解決方案和溝通策略。</p>
+<p class="p1"><span class="Apple-converted-space">        </span>請專注於提供實用、可操作的建議，並保持客觀中立。</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>事件名稱：${selectedNodeDetails.name}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>我的反思：${selectedNodeDetails.mistake}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>他認為我的藉口：${selectedNodeDetails.excuse}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>實際上來龍去脈：${selectedNodeDetails.actual}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>最後誤解了我什麼：${selectedNodeDetails.misunderstood}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>這件事影響了什麼：${selectedNodeDetails.impact}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>請以條列式（Markdown 格式）提供建議。</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let chatHistory = [];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>chatHistory.push({ role: "user", parts: [{ text: prompt }] });</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const payload = { contents: chatHistory };</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const apiKey = ""; // Canvas 將自動提供 API key</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const response = await fetch(apiUrl, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>method: 'POST',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>headers: { 'Content-Type': 'application/json' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>body: JSON.stringify(payload)</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const result = await response.json();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (result.candidates &amp;&amp; result.candidates.length &gt; 0 &amp;&amp;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>result.candidates[0].content &amp;&amp; result.candidates[0].content.parts &amp;&amp;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>result.candidates[0].content.parts.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const text = result.candidates[0].content.parts[0].text;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>setSolutionText(text);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>setSolutionText('抱歉，未能生成解決方案。請稍後再試。');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error("Gemini API response structure unexpected or content missing:", result);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setSolutionText('在生成解決方案時發生錯誤。請檢查您的網絡連接或稍後再試。');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>console.error("Error calling Gemini API:", error);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} finally {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>setSolutionLoading(false);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p2"><br></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 計算線條起點和終點</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const getConnectionPoints = (fromId, toId) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const fromNode = events.find(e =&gt; e.id === fromId);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const toNode = events.find(e =&gt; e.id === toId);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!fromNode || !toNode) return { x1: 0, y1: 0, x2: 0, y2: 0 };</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 假定節點大小，計算中心點</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const nodeWidth = 150; // Tailwind w-36 approx 144px</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const nodeHeight = 64; // Tailwind h-16 approx 64px</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const x1 = fromNode.position.x + nodeWidth / 2;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const y1 = fromNode.position.y + nodeHeight / 2;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const x2 = toNode.position.x + nodeWidth / 2;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const y2 = toNode.position.y + nodeHeight / 2;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>return { x1, y1, x2, y2 };</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>return (</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div className="flex flex-col h-screen bg-gray-100 font-inter antialiased"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="flex-grow relative overflow-hidden p-4 sm:p-6" ref={containerRef} onClick={handleCanvasClick}&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{/* 關係圖區域 */}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{connections.map((conn, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>const { x1, y1, x2, y2 } = getConnectionPoints(conn.from, conn.to);</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>return (</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;g key={index}&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;line</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>x1={x1} y1={y1} x2={x2} y2={y2}</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>stroke="#3B82F6" strokeWidth="2" markerEnd="url(#arrowhead)"</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>{/* 連線文字標籤 - 為了簡潔性暫不渲染，如需可在此處添加 text 元素 */}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/g&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>})}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{/* 定義箭頭標記 */}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;defs&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;marker id="arrowhead" markerWidth="10" markerHeight="7"</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>refX="0" refY="3.5" orient="auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/marker&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/defs&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/svg&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>{/* 節點渲染 */}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{events.map(event =&gt; (</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>key={event.id}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>className={`event-node absolute bg-white shadow-lg rounded-xl p-4 w-36 h-16 flex items-center justify-center text-center text-sm font-semibold cursor-grab transition-shadow duration-200 ease-in-out hover:shadow-xl active:cursor-grabbing ${draggingNodeId === event.id ? 'z-20 ring-4 ring-blue-300' : 'z-10'}`}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>style={{ left: event.position.x, top: event.position.y }}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>onMouseDown={(e) =&gt; handleDragStart(e, event.id)}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>onTouchStart={(e) =&gt; handleDragStart(e, event.id)}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>onClick={() =&gt; handleNodeClick(event.id)}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>{event.name}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>))}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>{/* 詳情面板 */}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{selectedNodeDetails &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="details-panel bg-blue-50 p-6 rounded-t-3xl shadow-2xl overflow-y-auto max-h-1/2 sm:max-h-1/3 md:max-h-1/4 lg:max-h-1/3 w-full text-gray-800 transition-all duration-300 ease-in-out z-30"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 className="text-xl font-bold text-blue-700 mb-4"&gt;{selectedNodeDetails.name}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="space-y-4 text-base"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 className="font-semibold text-blue-600"&gt;我錯了 / 我的反思：&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p className="text-gray-700 leading-relaxed"&gt;{selectedNodeDetails.mistake}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 className="font-semibold text-blue-600"&gt;他認為我的藉口是什麼？&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p className="text-gray-700 leading-relaxed"&gt;{selectedNodeDetails.excuse}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 className="font-semibold text-blue-600"&gt;實際上來龍去脈：&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p className="text-gray-700 leading-relaxed"&gt;{selectedNodeDetails.actual}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 className="font-semibold text-blue-600"&gt;最後誤解了我什麼？&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p className="text-gray-700 leading-relaxed"&gt;{selectedNodeDetails.misunderstood}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 className="font-semibold text-blue-600"&gt;這件事影響了什麼事情？&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p className="text-gray-700 leading-relaxed"&gt;{selectedNodeDetails.impact}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{/* 新增：LLM 建議解決方案按鈕 */}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>onClick={handleSuggestSolution}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>disabled={solutionLoading}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>{solutionLoading ? '生成中...' : '✨ 建議解決方案 ✨'}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{/* 新增：解決方案顯示區域 */}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>{solutionText &amp;&amp; (</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div className="mt-6 p-4 bg-white rounded-lg shadow-inner border border-green-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h4 className="font-semibold text-green-700 mb-2"&gt;建議的解決方案：&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p className="text-gray-700 whitespace-pre-wrap"&gt;{solutionText}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>)}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>onClick={() =&gt; setSelectedNodeDetails(null)}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>關閉詳情</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>)}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{/* 說明區塊 */}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="absolute bottom-4 left-4 right-4 bg-white p-4 rounded-xl shadow-lg z-40 text-sm text-gray-700 sm:bottom-6 sm:left-6 sm:right-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p className="font-bold text-blue-600 mb-2"&gt;使用說明：&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;p&gt;在圖中點擊任何一個事件方塊，下方將顯示該事件的詳細說明。您可以拖曳方塊來重新排列它們。點擊「✨ 建議解決方案 ✨」按鈕，讓人工智慧提供解決策略。點擊空白處可關閉詳情。&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>);</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">export default App;</p>
+</body>
+</html>
