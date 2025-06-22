@@ -175,8 +175,10 @@ const App = () => {
     const [draggingNodeId, setDraggingNodeId] = useState(null);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const [selectedNodeDetails, setSelectedNodeDetails] = useState(null);
-    const [solutionLoading, setSolutionLoading] = useState(false); // 新增：解決方案載入狀態
-    const [solutionText, setSolutionText] = useState(''); // 新增：解決方案文字
+    const [solutionLoading, setSolutionLoading] = useState(false); // 解決方案載入狀態
+    const [solutionText, setSolutionText] = useState(''); // 解決方案文字
+    const [draftLoading, setDraftLoading] = useState(false); // 草稿載入狀態
+    const [draftText, setDraftText] = useState(''); // 草稿文字
 
     const containerRef = useRef(null);
 
@@ -220,6 +222,7 @@ const App = () => {
         const node = events.find(event => event.id === id);
         setSelectedNodeDetails(node ? node.details : null);
         setSolutionText(''); // 清空之前的解決方案
+        setDraftText(''); // 清空之前的溝通草稿
     }, [events]);
 
     // 點擊空白處關閉詳情
@@ -228,6 +231,7 @@ const App = () => {
         if (e.target === containerRef.current || !e.target.closest('.event-node') && !e.target.closest('.details-panel')) {
             setSelectedNodeDetails(null);
             setSolutionText(''); // 清空解決方案
+            setDraftText(''); // 清空溝通草稿
         }
     }, []);
 
@@ -296,6 +300,57 @@ const App = () => {
             console.error("Error calling Gemini API:", error);
         } finally {
             setSolutionLoading(false);
+        }
+    };
+
+    // 新增：LLM 生成溝通草稿功能
+    const handleGenerateCommunicationDraft = async () => {
+        if (!selectedNodeDetails) return;
+
+        setDraftLoading(true);
+        setDraftText(''); // 清空舊的溝通草稿
+
+        const prompt = `
+        請根據以下事件的詳細資訊，以專業、客觀且不帶情緒的語氣，為我草擬一份給主管 Stacey 的溝通草稿。這份草稿應旨在釐清誤解、說明事實、表達我的反思及提出未來改進方案，以重建信任。請避免指責，專注於解決問題。
+        
+        事件名稱：${selectedNodeDetails.name}
+        我的反思：${selectedNodeDetails.mistake}
+        他認為我的藉口：${selectedNodeDetails.excuse}
+        實際上來龍去脈：${selectedNodeDetails.actual}
+        最後誤解了我什麼：${selectedNodeDetails.misunderstood}
+        這件事影響了什麼：${selectedNodeDetails.impact}
+
+        請以信件或訊息的形式提供草稿，包含標題（若適用）和主要內容。請務必使用中文（繁體）。
+        `;
+
+        try {
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Canvas 將自動提供 API key
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                const text = result.candidates[0].content.parts[0].text;
+                setDraftText(text);
+            } else {
+                setDraftText('抱歉，未能生成溝通草稿。請稍後再試。');
+                console.error("Gemini API response structure unexpected or content missing:", result);
+            }
+        } catch (error) {
+            setDraftText('在生成溝通草稿時發生錯誤。請檢查您的網絡連接或稍後再試。');
+            console.error("Error calling Gemini API:", error);
+        } finally {
+            setDraftLoading(false);
         }
     };
 
@@ -387,7 +442,7 @@ const App = () => {
                         </div>
                     </div>
                     
-                    {/* 新增：LLM 建議解決方案按鈕 */}
+                    {/* LLM 建議解決方案按鈕 */}
                     <button
                         onClick={handleSuggestSolution}
                         disabled={solutionLoading}
@@ -396,11 +451,28 @@ const App = () => {
                         {solutionLoading ? '生成中...' : '✨ 建議解決方案 ✨'}
                     </button>
 
-                    {/* 新增：解決方案顯示區域 */}
+                    {/* LLM 生成溝通草稿按鈕 */}
+                    <button
+                        onClick={handleGenerateCommunicationDraft}
+                        disabled={draftLoading}
+                        className="mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {draftLoading ? '生成中...' : '✨ 生成溝通草稿 ✨'}
+                    </button>
+
+                    {/* 解決方案顯示區域 */}
                     {solutionText && (
                         <div className="mt-6 p-4 bg-white rounded-lg shadow-inner border border-green-200">
                             <h4 className="font-semibold text-green-700 mb-2">建議的解決方案：</h4>
                             <p className="text-gray-700 whitespace-pre-wrap">{solutionText}</p>
+                        </div>
+                    )}
+
+                    {/* 溝通草稿顯示區域 */}
+                    {draftText && (
+                        <div className="mt-4 p-4 bg-white rounded-lg shadow-inner border border-purple-200">
+                            <h4 className="font-semibold text-purple-700 mb-2">溝通草稿：</h4>
+                            <p className="text-gray-700 whitespace-pre-wrap">{draftText}</p>
                         </div>
                     )}
 
@@ -415,7 +487,7 @@ const App = () => {
             {/* 說明區塊 */}
             <div className="absolute bottom-4 left-4 right-4 bg-white p-4 rounded-xl shadow-lg z-40 text-sm text-gray-700 sm:bottom-6 sm:left-6 sm:right-6">
                 <p className="font-bold text-blue-600 mb-2">使用說明：</p>
-                <p>在圖中點擊任何一個事件方塊，下方將顯示該事件的詳細說明。您可以拖曳方塊來重新排列它們。點擊「✨ 建議解決方案 ✨」按鈕，讓人工智慧提供解決策略。點擊空白處可關閉詳情。</p>
+                <p>在圖中點擊任何一個事件方塊，下方將顯示該事件的詳細說明。您可以拖曳方塊來重新排列它們。點擊「✨ 建議解決方案 ✨」按鈕，讓人工智慧提供解決策略。點擊「✨ 生成溝通草稿 ✨」按鈕，獲得基於事件的溝通草稿。點擊空白處可關閉詳情。</p>
             </div>
         </div>
     );
